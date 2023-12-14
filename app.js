@@ -1,96 +1,59 @@
 const express = require('express');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+const funcoes = require('./modulo/funcoes.js');
+
+
 const app = express();
-const port = 8000;
 
-class PizzariaAPI {
-    constructor() {
-        // Load data from your module or database
-        this.apiPizzaria = require('./modulo/pizzaria.js');
-    }
+app.use(cors());
+app.use(bodyParser.json());
 
-    listarUsuarios() {
-        const usuarios = this.apiPizzaria.usuario;
-        const usuariosArray = usuarios.map(usuario => ({
-            id: usuario.Id,
-            nome: usuario.Nome,
-            email: usuario.Email,
-            telefone: usuario.Telefone,
-            endereco: usuario.Endereço,
-        }));
-        return usuariosArray;
-    }
-
-    produtoEspecifico(id) {
-        const produtos = this.apiPizzaria.produtos;
-        const produtoEncontrado = produtos.find(produto => produto.id === id);
-
-        if (produtoEncontrado) {
-            return {
-                id: produtoEncontrado.id,
-                nome: produtoEncontrado.Nome,
-                preco: produtoEncontrado.Preço,
-                avaliacao: produtoEncontrado.Avaliação,
-                descricao: produtoEncontrado.Descrição,
-                imagem: produtoEncontrado.Foto,
-            };
-        } else {
-            return "Produto não encontrado";
-        }
-    }
-
-    listarProdutos() {
-        const produtos = this.apiPizzaria.produtos;
-        const produtosArray = produtos.map(produto => ({
-            id: produto.id,
-            nome: produto.Nome,
-            preco: produto.Preço,
-            avaliacao: produto.Avaliação,
-            descricao: produto.Descrição,
-            imagem: produto.Foto,
-        }));
-        return produtosArray;
-    }
-
-    listarComentarios() {
-        // Assuming you have a comments array in your apiPizzaria module
-        return this.apiPizzaria.comentarios;
-    }
-
-    categorias() {
-        // Assuming you have a categories array in your apiPizzaria module
-        return this.apiPizzaria.categorias;
-    }
-}
-
-const pizzariaAPI = new PizzariaAPI();
-
-// Define your endpoints
-app.get('/usuarios', (req, res) => {
-    const usuarios = pizzariaAPI.listarUsuarios();
-    res.json(usuarios);
+// Middleware para configurar cabeçalhos CORS
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET');
+    next();
 });
 
-app.get('/produtos/:id', (req, res) => {
-    const id = parseInt(req.params.id);
-    const produto = pizzariaAPI.produtoEspecifico(id);
-    res.json(produto);
+// Endpoint: Listar os usuários
+app.get('/usuarios/dados', async function (req, res) {
+    const dados = funcoes.listarUsuarios();
+    res.json(dados);
 });
 
-app.get('/produtos', (req, res) => {
-    const produtos = pizzariaAPI.listarProdutos();
-    res.json(produtos);
+// Endpoint: Listar as categorias
+app.get('/categorias/dados', async function (req, res) {
+    const dados = funcoes.categorias();
+    res.json(dados);
 });
 
-app.get('/comentarios', (req, res) => {
-    const comentarios = pizzariaAPI.listarComentarios();
-    res.json(comentarios);
+// Endpoint: Listar os produtos
+app.get('/produtos/dados', async function (req, res) {
+    const dados = funcoes.listarProdutos();
+    res.json(dados);
 });
 
-app.get('/categorias', (req, res) => {
-    const categoriasList = pizzariaAPI.categorias();
-    res.json(categoriasList);
+// Endpoint: Listar os comentários
+app.get('/comentarios/dados', async function (req, res) {
+    const dados = funcoes.listarComentarios();
+    res.json(dados);
 });
 
-app.listen(port, () => {
-    console.log(`Server is running at http://localhost:${port}`);
+// Endpoint: Detalhes do produto
+app.get('/produtos/:id', async function (req, res) {
+    const { id } = req.params;
+    const produto = funcoes.produtoEspecifico(id);
+
+    if (produto) {
+        res.json(produto);
+    } else {
+        res.status(404).json({ message: 'Produto não encontrado' });
+    }
+});
+
+// Executar a API
+const PORT = 8080;
+app.listen(PORT, function () {
+    console.log(`API funcionando e aguardando requisições na porta ${PORT}`);
 });
