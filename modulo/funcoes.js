@@ -1,11 +1,11 @@
-const apiPizzaria = require('./pizzaria.js');
+const apiPizzaria = require('./pizzaria.js')
 
 const listarUsuarios = () => {
-    let usuarios = apiPizzaria.listarUsuarios || [];
-    let usuariosArray = [];
+    let usuarios = apiPizzaria.listarUsuarios || []
+    let usuariosArray = []
 
     for (let i = 0; i < usuarios.length; i++) {
-        let usuario = usuarios[i];
+        let usuario = usuarios[i]
 
         if (usuario) {
             let informacoesUsuarios = {
@@ -14,25 +14,25 @@ const listarUsuarios = () => {
                 email: usuario.Email,
                 telefone: usuario.Telefone,
                 endereco: usuario.Endereço
-            };
+            }
 
-            usuariosArray.push(informacoesUsuarios);
+            usuariosArray.push(informacoesUsuarios)
         }
     }
 
-    return usuariosArray;
-};
+    return usuariosArray
+}
 
 const listarCategorias = () => {
-    return apiPizzaria.categorias || [];
-};
+    return apiPizzaria.categorias
+}
 
 const listarProdutos = () => {
-    let produtos = apiPizzaria.listarProdutos || [];
-    let produtosArray = [];
+    let produtos = apiPizzaria.listarProdutos
+    let produtosArray = []
 
     for (let i = 0; i < produtos.length; i++) {
-        let produto = produtos[i];
+        let produto = produtos[i]
         let informacoesProdutos = {
             id: produto.id,
             nome: produto.Nome,
@@ -40,13 +40,13 @@ const listarProdutos = () => {
             avaliacao: produto.Avaliação,
             descricao: produto.Descrição,
             imagem: produto.Foto
-        };
+        }
 
-        produtosArray.push(informacoesProdutos);
+        produtosArray.push(informacoesProdutos)
     }
 
-    return produtosArray;
-};
+    return produtosArray
+}
 
 const listarComentarios = () => {
     let produtos = apiPizzaria.listarProdutos
@@ -67,15 +67,15 @@ const listarComentarios = () => {
                 usuario: usuarioComentario.Nome || "Usuário não disponível"
             };
 
-            comentariosArray.push(comentariosInformacoes);
+            comentariosArray.push(comentariosInformacoes)
         }
     }
 
     return comentariosArray
-};
+}
 
 const produtoEspecifico = (id) => {
-    let produtos = apiPizzaria.produtos || []
+    let produtos = apiPizzaria.produtos
     let produtoEncontrado = null
 
     for (let i = 0; i < produtos.length; i++) {
@@ -89,13 +89,13 @@ const produtoEspecifico = (id) => {
                 avaliacao: produto.Avaliação,
                 descricao: produto.Descrição,
                 imagem: produto.Foto
-            };
-            break;
+            }
+            break
         }
     }
 
-    return produtoEncontrado;
-};
+    return produtoEncontrado
+}
 
 console.log(listarUsuarios())
 
