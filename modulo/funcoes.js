@@ -1,21 +1,23 @@
 const apiPizzaria = require('./pizzaria.js');
 
 const listarUsuarios = () => {
-    let usuarios = apiPizzaria.usuario || [];
+    let usuarios = apiPizzaria.listarUsuarios || [];
     let usuariosArray = [];
 
     for (let i = 0; i < usuarios.length; i++) {
         let usuario = usuarios[i];
 
-        let informacoesUsuarios = {
-            id: usuario.Id,
-            nome: usuario.Nome,
-            email: usuario.Email,
-            telefone: usuario.Telefone,
-            endereco: usuario.Endereço
-        };
+        if (usuario) {
+            let informacoesUsuarios = {
+                id: usuario.Id,
+                nome: usuario.Nome,
+                email: usuario.Email,
+                telefone: usuario.Telefone,
+                endereco: usuario.Endereço
+            };
 
-        usuariosArray.push(informacoesUsuarios);
+            usuariosArray.push(informacoesUsuarios);
+        }
     }
 
     return usuariosArray;
@@ -26,7 +28,7 @@ const listarCategorias = () => {
 };
 
 const listarProdutos = () => {
-    let produtos = apiPizzaria.produtos || [];
+    let produtos = apiPizzaria.listarProdutos || [];
     let produtosArray = [];
 
     for (let i = 0; i < produtos.length; i++) {
@@ -47,18 +49,17 @@ const listarProdutos = () => {
 };
 
 const listarComentarios = () => {
-    let produtos = apiPizzaria.produtos || [];
-    let comentariosArray = [];
+    let produtos = apiPizzaria.listarProdutos
+    let comentariosArray = []
 
     for (let i = 0; i < produtos.length; i++) {
-        let produto = produtos[i];
-        let comentariosProduto = produto.comentario || [];
+        let produto = produtos[i]
+        let comentariosProduto = produto.comentario
 
         for (let j = 0; j < comentariosProduto.length; j++) {
-            let comentario = comentariosProduto[j];
+            let comentario = comentariosProduto[j]
 
-            let usuarioComentario = comentario.usuario || {};
-
+            let usuarioComentario = comentario.usuario
             let comentariosInformacoes = {
                 id: comentario.id,
                 mensagem: comentario.mensagem,
@@ -70,15 +71,15 @@ const listarComentarios = () => {
         }
     }
 
-    return comentariosArray;
+    return comentariosArray
 };
 
 const produtoEspecifico = (id) => {
-    let produtos = apiPizzaria.produtos || [];
-    let produtoEncontrado = null;
+    let produtos = apiPizzaria.produtos || []
+    let produtoEncontrado = null
 
     for (let i = 0; i < produtos.length; i++) {
-        let produto = produtos[i];
+        let produto = produtos[i]
 
         if (produto.id === id) {
             produtoEncontrado = {
@@ -95,3 +96,13 @@ const produtoEspecifico = (id) => {
 
     return produtoEncontrado;
 };
+
+console.log(listarUsuarios())
+
+module.exports = {
+    listarCategorias,
+    listarComentarios,
+    listarProdutos,
+    listarUsuarios,
+    produtoEspecifico
+}

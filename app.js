@@ -1,59 +1,63 @@
-const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
-const funcoes = require('./modulo/funcoes.js');
-
+const express = require('express')
+const cors = require('cors')
+const bodyParser = require('body-parser')
 
 const app = express();
 
-app.use(cors());
-app.use(bodyParser.json());
-
-// Middleware para configurar cabeçalhos CORS
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Methods', 'GET');
+app.use((request,response,next) =>{
+    response.header('Acess-Control-Allow-Origin','*');
+    response.header('Acess-Control-Allow-Methods', 'GET');
+    app.use(cors())
+    
     next();
-});
+})
 
-// Endpoint: Listar os usuários
-app.get('/usuarios/dados', async function (req, res) {
-    const dados = funcoes.listarUsuarios();
-    res.json(dados);
-});
 
-// Endpoint: Listar as categorias
-app.get('/categorias/dados', async function (req, res) {
-    const dados = funcoes.categorias();
-    res.json(dados);
-});
+app.get('/categorias', cors(), async function(request,response,next){
 
-// Endpoint: Listar os produtos
-app.get('/produtos/dados', async function (req, res) {
-    const dados = funcoes.listarProdutos();
-    res.json(dados);
-});
+    let categoria = require ('./modulo/funcoes.js');
+    let categorias = categoria.listarCategorias();
 
-// Endpoint: Listar os comentários
-app.get('/comentarios/dados', async function (req, res) {
-    const dados = funcoes.listarComentarios();
-    res.json(dados);
-});
+        response.json(categorias);
+        response.status(200);
+    
+} )
 
-// Endpoint: Detalhes do produto
-app.get('/produtos/:id', async function (req, res) {
-    const { id } = req.params;
-    const produto = funcoes.produtoEspecifico(id);
 
-    if (produto) {
-        res.json(produto);
-    } else {
-        res.status(404).json({ message: 'Produto não encontrado' });
-    }
-});
+app.get('/produtos', cors(), async function(request,response,next){
 
-// Executar a API
-const PORT = 8080;
-app.listen(PORT, function () {
-    console.log(`API funcionando e aguardando requisições na porta ${PORT}`);
-});
+    let produto = require ('./modulo/funcoes.js');
+    let produtos = produto.listarProdutos();
+
+        response.json(produtos);
+        response.status(200);
+    
+} )
+
+app.get('/usuarios', cors(), async function(request,response,next){
+
+    let usuario = require ('./modulo/funcoes.js');
+    let usuarios = usuario.listarUsuarios();
+
+        response.json(usuarios);
+        response.status(200);
+    
+} )
+
+app.get('/produtosEspecificos/:id', cors(), async function(request,response,next){
+
+    let mostrarProdutosEspecificos = request.params.id
+    
+        let produtoEspecifico = require ('./modulo/funcoes.js');
+        let produtoEspecificos = produtoEspecifico.produtoEspecifico(mostrarProdutosEspecificos);
+    
+            response.json(produtoEspecificos);
+            response.status(200);
+        
+    } )
+
+
+
+app.listen('8080', function(){
+    console.log('API FUNCIONANDO')
+})
